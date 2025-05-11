@@ -78,3 +78,65 @@ function showMessage(isSuccess) {
     closeBtn.removeEventListener("click", hideMessage);
   }
 }
+
+
+
+// Проверяем, было ли уже принято соглашение о cookies
+function checkCookieConsent() {
+  return localStorage.getItem('cookieConsent');
+}
+
+// Показываем баннер cookies
+function showCookieBanner() {
+  const cookieBanner = document.querySelector('.cookie-consent');
+  if (cookieBanner && !checkCookieConsent()) {
+      cookieBanner.style.display = 'block';
+  }
+}
+
+// Скрываем баннер cookies и сохраняем согласие
+function hideCookieBanner() {
+  const cookieBanner = document.querySelector('.cookie-consent');
+  if (cookieBanner) {
+      cookieBanner.style.display = 'none';
+  }
+}
+
+// Устанавливаем согласие о cookies
+function setCookieConsent(accepted) {
+  localStorage.setItem('cookieConsent', accepted ? 'accepted' : 'declined');
+  hideCookieBanner();
+  
+  // Здесь можно добавить код для установки/удаления аналитических cookies
+  if (accepted) {
+      // Установка аналитических cookies
+      console.log('Cookies accepted');
+  } else {
+      // Удаление аналитических cookies
+      console.log('Cookies declined');
+  }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  // Показываем баннер, если согласие еще не дано
+  if (!checkCookieConsent()) {
+      showCookieBanner();
+  }
+  
+  // Обработчики для кнопок
+  const acceptBtn = document.querySelector('.cookie-accept');
+  const declineBtn = document.querySelector('.cookie-decline');
+  
+  if (acceptBtn) {
+      acceptBtn.addEventListener('click', function() {
+          setCookieConsent(true);
+      });
+  }
+  
+  if (declineBtn) {
+      declineBtn.addEventListener('click', function() {
+          setCookieConsent(false);
+      });
+  }
+});
